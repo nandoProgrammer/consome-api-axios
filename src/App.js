@@ -1,25 +1,40 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import api from "./services/api";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+const App = () => {
+  const [data, setData] = useState();
+  const [requestComplete, setRequestComplete] = useState(false);
+
+
+  useEffect(() => {
+    api
+      .get("")
+      .then((response) => {
+        setData(response.data);
+        setRequestComplete(true);
+      })
+      .catch((err) => {
+        console.error("ops! ocorreu um erro" + err);
+      });
+  }, []);
+
+  if(requestComplete){
+    console.log(data);
+  }
+  
+  console.log('AQUI' + process.env.REACT_APP_SECRET_API);
+
+  return(
+   <>
+   {
+     requestComplete ? data.map((item) => (
+       <span>{ item.nome }</span>
+     )):(
+       <h1>carregando...</h1>
+     )
+   }
+   </>
+  )
 }
 
 export default App;
